@@ -173,36 +173,27 @@ echo ""
 echo "🔗 Connect to GitHub Remote"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "Choose authentication method:"
-echo "  1) SSH (recommended if you have SSH key setup)"
-echo "  2) HTTPS (requires Personal Access Token)"
+echo "Enter your GitHub repository URL:"
+echo "Examples:"
+echo "  SSH:   git@github.com:username/sipakrt.git"
+echo "  HTTPS: https://github.com/username/sipakrt.git"
 echo ""
-read -p "Choose (1 or 2): " -n 1 -r AUTH_METHOD
+read -p "Repository URL: " REMOTE_URL
+
+# Validate URL
+if [[ ! $REMOTE_URL =~ ^(https://github.com/|git@github.com:) ]]; then
+    echo -e "${RED}❌ Invalid GitHub URL!${NC}"
+    exit 1
+fi
+
 echo ""
+echo "Using: $REMOTE_URL"
 
-read -p "Your GitHub username: " GITHUB_USER
-
-if [ "$AUTH_METHOD" = "1" ]; then
-    REMOTE_URL="git@github.com:$GITHUB_USER/sipakrt.git"
-    echo ""
-    echo "Using SSH: $REMOTE_URL"
-    
-    # Test SSH connection
-    echo "Testing SSH connection..."
-    if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
-        echo -e "${GREEN}✓ SSH connection successful${NC}"
-    else
-        echo -e "${YELLOW}⚠️  SSH test returned non-success. Continuing anyway...${NC}"
-        echo "If push fails, you may need to setup SSH key:"
-        echo "  https://docs.github.com/en/authentication/connecting-to-github-with-ssh"
-    fi
-else
-    REMOTE_URL="https://github.com/$GITHUB_USER/sipakrt.git"
-    echo ""
-    echo "Using HTTPS: $REMOTE_URL"
-    echo ""
-    echo -e "${YELLOW}Note: You will need Personal Access Token (not password)${NC}"
-    echo "Create token at: https://github.com/settings/tokens"
+# Extract username and repo name for display
+if [[ $REMOTE_URL =~ github.com[:/]([^/]+)/([^/.]+) ]]; then
+    GITHUB_USER="${BASH_REMATCH[1]}"
+    REPO_NAME="${BASH_REMATCH[2]}"
+    echo "Repository: ${GREEN}$GITHUB_USER/$REPO_NAME${NC}"
 fi
 
 echo ""
