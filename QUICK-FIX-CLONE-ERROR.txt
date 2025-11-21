@@ -1,0 +1,145 @@
+═══════════════════════════════════════════════════════════════════
+  🚨 ERROR: Git Clone Resource Issue - QUICK FIX
+═══════════════════════════════════════════════════════════════════
+
+Error kamu:
+  fatal: unable to create thread: Resource temporarily unavailable
+
+Penyebab: Server low memory (shared hosting limitation)
+
+═══════════════════════════════════════════════════════════════════
+  ⚡ SOLUSI TERCEPAT (Copy-Paste Commands)
+═══════════════════════════════════════════════════════════════════
+
+OPSI 1: Shallow Clone (Hemat Memory) ⭐ RECOMMENDED
+────────────────────────────────────────────────────────────────
+cd /home/rang6332/sipakrt.ranahtech.com
+
+# Hapus folder gagal jika ada
+rm -rf sipakrt-new
+
+# Clone dengan depth 1 (hanya commit terakhir)
+git clone --depth 1 https://github.com/fajarnrs/SIPAKRT.git sipakrt-new
+
+# Jika berhasil, lanjut:
+cd sipakrt-new
+cp ../.env .env
+cp -r ../storage .
+chmod -R 775 storage bootstrap/cache
+php artisan migrate --force
+php artisan cache:clear
+php artisan config:cache
+php artisan storage:link
+
+# Update document root di cPanel ke:
+# /home/rang6332/sipakrt.ranahtech.com/sipakrt-new/public
+────────────────────────────────────────────────────────────────
+
+OPSI 2: Download ZIP (No Git Needed) ⭐⭐ PALING AMAN
+────────────────────────────────────────────────────────────────
+cd /home/rang6332/sipakrt.ranahtech.com
+
+# Hapus folder gagal
+rm -rf sipakrt-new
+
+# Download ZIP
+wget https://github.com/fajarnrs/SIPAKRT/archive/refs/heads/main.zip
+
+# Extract
+unzip main.zip
+
+# Rename
+mv SIPAKRT-main sipakrt-new
+
+# Cleanup
+rm main.zip
+
+# Setup
+cd sipakrt-new
+cp ../.env .env
+cp -r ../storage .
+chmod -R 775 storage bootstrap/cache
+
+# Install composer
+wget https://getcomposer.org/composer.phar
+php composer.phar install --no-dev --optimize-autoloader --no-scripts
+
+# Run migration & cache
+php artisan migrate --force
+php artisan config:clear
+php artisan cache:clear
+php artisan optimize
+php artisan config:cache
+php artisan storage:link
+
+# Update document root di cPanel ke:
+# /home/rang6332/sipakrt.ranahtech.com/sipakrt-new/public
+────────────────────────────────────────────────────────────────
+
+OPSI 3: Manual via File Manager ⭐⭐⭐ TERMUDAH (No Terminal)
+────────────────────────────────────────────────────────────────
+1. Backup database via phpMyAdmin (Export → Go)
+
+2. Backup .env:
+   File Manager → Copy .env → Rename ke .env.backup
+
+3. Download ZIP dari browser:
+   https://github.com/fajarnrs/SIPAKRT/archive/main.zip
+
+4. Upload ke cPanel:
+   File Manager → Upload main.zip
+
+5. Extract:
+   Right click main.zip → Extract
+
+6. Rename folder:
+   SIPAKRT-main → sipakrt-new
+
+7. Copy .env & storage:
+   - Copy .env.backup → sipakrt-new/.env
+   - Copy folder storage → sipakrt-new/storage
+
+8. Set permission via Terminal:
+   cd sipakrt-new
+   chmod -R 775 storage bootstrap/cache
+
+9. Install composer:
+   wget https://getcomposer.org/composer.phar
+   php composer.phar install --no-dev --optimize-autoloader
+
+10. Run migration:
+    php artisan migrate --force
+    php artisan cache:clear
+    php artisan config:cache
+    php artisan storage:link
+
+11. Update document root di cPanel:
+    Domains → Edit → Document Root
+    /home/rang6332/sipakrt.ranahtech.com/sipakrt-new/public
+
+12. Test di browser ✅
+────────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════════════════════════════════
+  🔍 CHECK: Apakah Sudah Berhasil?
+═══════════════════════════════════════════════════════════════════
+
+Test di browser:
+✓ Website bisa diakses
+✓ Login dengan No. KK (16 digit) berhasil
+✓ Login dengan email berhasil
+✓ Bisa create KK baru
+✓ User auto-created untuk kepala KK
+✓ Data lama masih ada semua
+
+═══════════════════════════════════════════════════════════════════
+  📞 Masih Error?
+═══════════════════════════════════════════════════════════════════
+
+Baca troubleshooting lengkap:
+https://github.com/fajarnrs/SIPAKRT/blob/main/TROUBLESHOOTING-CLONE-ERROR.txt
+
+Atau contact support:
+https://github.com/fajarnrs/SIPAKRT/issues
+
+═══════════════════════════════════════════════════════════════════
