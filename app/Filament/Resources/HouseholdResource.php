@@ -238,7 +238,13 @@ class HouseholdResource extends Resource
                             ->first(fn (Resident $resident) => $resident->relationship === 'Kepala Keluarga' && $resident->status === Resident::STATUS_ACTIVE)
                     )->name)
                     ->sortable(false)
-                    ->searchable(false),
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->whereHas('residents', function ($q) use ($search) {
+                            $q->where('relationship', 'Kepala Keluarga')
+                              ->where('status', Resident::STATUS_ACTIVE)
+                              ->where('name', 'like', "%{$search}%");
+                        });
+                    }),
                 Tables\Columns\TextColumn::make('residents_count')
                     ->label('Jumlah Anggota')
                     ->counts('residents')

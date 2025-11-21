@@ -12,6 +12,11 @@ class ListHouseholds extends ListRecords
 {
     protected static string $resource = HouseholdResource::class;
 
+    protected function getTitle(): string
+    {
+        return 'Daftar KK';
+    }
+
     protected function getActions(): array
     {
         return [

@@ -113,7 +113,18 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->label('Email / Username')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->getStateUsing(function ($record) {
+                        // Tampilkan No. KK jika email kosong
+                        return $record->email ?? $record->family_card_number;
+                    })
+                    ->description(function ($record) {
+                        // Tampilkan No. KK sebagai deskripsi jika ada email
+                        if ($record->email && $record->family_card_number) {
+                            return 'No. KK: ' . $record->family_card_number;
+                        }
+                        return null;
+                    }),
                 Tables\Columns\BadgeColumn::make('role')
                     ->label('Peran')
                     ->colors([
@@ -196,6 +207,7 @@ class UserResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->whereNotNull('email');
+        // Tampilkan semua user (dengan email atau No. KK)
+        return parent::getEloquentQuery();
     }
 }

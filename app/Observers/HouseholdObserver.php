@@ -22,16 +22,45 @@ class HouseholdObserver
      */
     public function updated(Household $household): void
     {
-        // Hanya sync jika ada perubahan pada field kepala keluarga
+        // Sync head resident jika ada perubahan field kepala keluarga
         if ($household->wasChanged([
             'head_name', 'head_nik', 'head_gender', 'head_birth_place', 
             'head_birth_date', 'head_religion', 'head_education', 
-            'head_occupation', 'head_marital_status', 'head_status'
+            'head_occupation', 'head_marital_status', 'head_status', 'head_email'
         ])) {
             $this->syncHeadResident($household);
         }
+        
+        // Juga sync user jika ada perubahan No. KK
+        if ($household->wasChanged('family_card_number')) {
+            $headResident = Resident::where('household_id', $household->id)
+                ->where('relationship', 'Kepala Keluarga')
+                ->first();
+            
+            if ($headResident) {
+                $this->createUserForHeadResident($headResident, $household);
+            }
+        }
     }
 
+    /**
+     * Handle the Household "deleting" event (before delete).
+     */
+    public function deleting(Household $household): void
+    {
+        // Hapus user login kepala keluarga sebelum KK dihapus
+        $headResident = Resident::where('household_id', $household->id)
+            ->where('relationship', 'Kepala Keluarga')
+            ->first();
+        
+        if ($headResident && $headResident->user_id) {
+            User::where('id', $headResident->user_id)->delete();
+        }
+        
+        // Hapus semua residents di KK ini
+        Resident::where('household_id', $household->id)->delete();
+    }
+    
     /**
      * Handle the Household "deleted" event.
      */
@@ -108,10 +137,10 @@ class HouseholdObserver
             $headResident = Resident::create(array_merge($residentData, [
                 'household_id' => $household->id,
             ]));
-            
-            // Auto-create user login untuk kepala keluarga
-            $this->createUserForHeadResident($headResident, $household);
         }
+        
+        // Auto-create/update user login untuk kepala keluarga
+        $this->createUserForHeadResident($headResident, $household);
     }
     
     /**
@@ -119,18 +148,20 @@ class HouseholdObserver
      */
     protected function createUserForHeadResident(Resident $headResident, Household $household): void
     {
-        // Jika sudah ada email dan belum punya user
-        if (!empty($household->head_email) && !$headResident->user_id) {
-            // Cek apakah email sudah dipakai user lain
-            $existingUser = User::where('email', $household->head_email)->first();
+        // Selalu buat/update user untuk kepala keluarga dengan No. KK
+        if (!$headResident->user_id) {
+            // Cek apakah No. KK sudah dipakai user lain
+            $existingUser = User::where('family_card_number', $household->family_card_number)->first();
             
             if (!$existingUser) {
-                // Buat user baru
+                // Buat user baru dengan No. KK sebagai username
                 $user = User::create([
                     'name' => $household->head_name,
                     'email' => $household->head_email,
+                    'family_card_number' => $household->family_card_number,
                     'password' => Hash::make('password123'), // Default password
                     'is_admin' => false,
+                    'role' => 'warga', // Warga biasa, bukan admin
                 ]);
                 
                 // Link user ke resident
@@ -138,6 +169,16 @@ class HouseholdObserver
             } else {
                 // Link ke user yang sudah ada
                 $headResident->update(['user_id' => $existingUser->id]);
+            }
+        } else {
+            // Update user yang sudah ada
+            $user = User::find($headResident->user_id);
+            if ($user) {
+                $user->update([
+                    'name' => $household->head_name,
+                    'email' => $household->head_email,
+                    'family_card_number' => $household->family_card_number,
+                ]);
             }
         }
     }
