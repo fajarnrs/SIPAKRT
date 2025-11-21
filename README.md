@@ -12,32 +12,32 @@
 ## ✨ Fitur Utama
 
 ### 📋 Manajemen Kartu Keluarga (KK)
-- ✅ CRUD data KK dengan detail lengkap
-- ✅ Auto-update status (aktif/non-aktif) berdasarkan kepala keluarga
-- ✅ View read-only untuk detail KK
-- ✅ Auto-create kepala keluarga saat KK dibuat
-- ✅ Login menggunakan **No. KK (16 digit)** atau email
+- CRUD data KK dengan detail lengkap
+- Auto-update status (aktif/non-aktif) berdasarkan kepala keluarga
+- View read-only untuk detail KK
+- Auto-create kepala keluarga saat KK dibuat
+- Login menggunakan **No. KK (16 digit)** atau email
 
 ### 👥 Manajemen Warga
-- ✅ Data lengkap dengan relasi KK
-- ✅ Auto-sync kepala keluarga
-- ✅ Status: Aktif, Meninggal, Pindah, dll
-- ✅ Auto-create user akun untuk kepala KK
+- Data lengkap dengan relasi KK
+- Auto-sync kepala keluarga
+- Status: Aktif, Meninggal, Pindah, dll
+- Auto-create user akun untuk kepala KK
 
 ### 🏘️ Manajemen RT & Pengurus
-- ✅ Data RT dengan ketua RT
-- ✅ Pengurus dengan periode jabatan
-- ✅ Auto-update role user saat diangkat jadi Ketua RT
+- Data RT dengan ketua RT
+- Pengurus dengan periode jabatan
+- Auto-update role user saat diangkat jadi Ketua RT
 
 ### 📤 Export & Reporting
-- ✅ Export Excel dengan filter RT dan status
-- ✅ Format terstruktur dengan styling
+- Export Excel dengan filter RT dan status
+- Format terstruktur dengan styling
 
 ### 🔐 Multi-User & Security
-- ✅ **Admin**: Full access
-- ✅ **RT**: Akses terbatas per RT
-- ✅ **Warga**: Login dengan No. KK
-- ✅ Default password: password123
+- **Admin**: Full access
+- **RT**: Akses terbatas per RT
+- **Warga**: Login dengan No. KK
+- Default password: password123
 
 ---
 
@@ -113,44 +113,29 @@ php artisan config:cache
 
 ## 🚀 Deployment
 
-Panduan lengkap deployment tersedia di dokumentasi:
+Semua panduan dan script deployment ada di folder **`deploy/`**
 
 | Platform | Guide | Description |
 |----------|-------|-------------|
-| **cPanel** | [DEPLOYMENT-FROM-GITHUB.md](DEPLOYMENT-FROM-GITHUB.md) | Deploy via GitHub (tukar guling method) |
-| **VPS/Server** | [DEPLOYMENT.md](DEPLOYMENT.md) | Nginx/Apache production setup |
+| **cPanel** | [deploy/DEPLOYMENT-FROM-GITHUB.md](deploy/DEPLOYMENT-FROM-GITHUB.md) | Deploy via GitHub (tukar guling method) |
+| **VPS/Server** | [deploy/DEPLOYMENT.md](deploy/DEPLOYMENT.md) | Nginx/Apache production setup |
 | **Docker** | [docker-compose.yml](docker-compose.yml) | Container production |
 
 ### Quick Deploy Commands
 
-**From GitHub (Production):**
+**Production (cPanel):**
 ```bash
-# Download deployment script
-wget https://raw.githubusercontent.com/fajarnrs/SIPAKRT/main/deploy-from-github-cpanel.sh
+wget https://raw.githubusercontent.com/fajarnrs/SIPAKRT/main/deploy/deploy-from-github-cpanel.sh
 chmod +x deploy-from-github-cpanel.sh
-
-# Run deployment (data aman, .env tidak ditimpa)
 ./deploy-from-github-cpanel.sh
 ```
 
 **Low Memory Server:**
 ```bash
-wget https://raw.githubusercontent.com/fajarnrs/SIPAKRT/main/deploy-from-github-cpanel-lowmem.sh
+wget https://raw.githubusercontent.com/fajarnrs/SIPAKRT/main/deploy/deploy-from-github-cpanel-lowmem.sh
 chmod +x deploy-from-github-cpanel-lowmem.sh
 ./deploy-from-github-cpanel-lowmem.sh
 ```
-
----
-
-## 📚 Dokumentasi
-
-| File | Description |
-|------|-------------|
-| [README.md](README.md) | Quick start guide (this file) |
-| [DEPLOYMENT-FROM-GITHUB.md](DEPLOYMENT-FROM-GITHUB.md) | GitHub deployment (recommended) |
-| [DEPLOYMENT.md](DEPLOYMENT.md) | Production deployment guide |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Contributing guidelines |
-| [QUICK-DEPLOY-GUIDE.txt](QUICK-DEPLOY-GUIDE.txt) | Quick reference card |
 
 ---
 
@@ -169,12 +154,12 @@ chmod +x deploy-from-github-cpanel-lowmem.sh
 ## 🆕 What's New (v2.0)
 
 ### New Features
-- ✨ **Login dengan No. KK** (16 digit) atau email
-- ✨ **Auto-create user** untuk kepala KK (password: password123)
-- ✨ **Auto-update role** saat diangkat jadi Ketua RT
-- ✨ **Validasi ketat** 16 digit untuk No. KK dan NIK
-- ✨ **Search by nama** kepala keluarga di daftar KK
-- ✨ **Cascade delete** (hapus KK → auto hapus warga & user)
+- **Login dengan No. KK** (16 digit) atau email
+- **Auto-create user** untuk kepala KK (password: password123)
+- **Auto-update role** saat diangkat jadi Ketua RT
+- **Validasi ketat** 16 digit untuk No. KK dan NIK
+- **Search by nama** kepala keluarga di daftar KK
+- **Cascade delete** (hapus KK → auto hapus warga & user)
 
 ### New Commands
 ```bash
@@ -186,11 +171,11 @@ php artisan data:delete-all --force
 ```
 
 ### Improvements
-- 🐛 Fix duplicate user creation
-- 🐛 Fix dropdown filter RT leader selection
-- 🐛 Fix email nullable support
-- 🎨 Kapitalisasi label RT dan KK
-- 🎨 Simplified RT edit form
+- Fix duplicate user creation
+- Fix dropdown filter RT leader selection
+- Fix email nullable support
+- Kapitalisasi label RT dan KK
+- Simplified RT edit form
 
 ---
 
@@ -199,9 +184,9 @@ php artisan data:delete-all --force
 Kontribusi sangat diterima! Lihat [CONTRIBUTING.md](CONTRIBUTING.md) untuk panduan.
 
 1. Fork repository
-2. Create feature branch (git checkout -b feature/AmazingFeature)
-3. Commit changes (git commit -m 'Add some AmazingFeature')
-4. Push to branch (git push origin feature/AmazingFeature)
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Open Pull Request
 
 ---
