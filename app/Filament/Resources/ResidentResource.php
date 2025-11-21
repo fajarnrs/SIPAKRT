@@ -46,7 +46,9 @@ class ResidentResource extends Resource
                             ->preload(),
                         Forms\Components\TextInput::make('nik')
                             ->label('NIK')
-                            ->maxLength(20),
+                            ->numeric()
+                            ->length(16)
+                            ->helperText('NIK harus tepat 16 digit angka'),
                         Forms\Components\TextInput::make('name')
                             ->label('Nama Lengkap')
                             ->required()

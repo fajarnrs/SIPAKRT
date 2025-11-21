@@ -148,9 +148,9 @@ class RtOfficialResource extends Resource
         return Resident::query()
             ->when($rtId, fn ($query) => $query->whereHas('household', fn (Builder $sub) => $sub->where('rt_id', $rtId)))
             ->when($search, fn ($query) => $query->where('name', 'like', "%{$search}%"))
-            ->whereNotNull('email')
+            ->where('status', Resident::STATUS_ACTIVE)
             ->orderBy('name')
-            ->limit(50)
+            ->limit(100)
             ->pluck('name', 'id')
             ->toArray();
     }

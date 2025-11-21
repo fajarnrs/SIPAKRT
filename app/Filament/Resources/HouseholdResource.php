@@ -51,16 +51,19 @@ class HouseholdResource extends Resource
                         Forms\Components\TextInput::make('family_card_number')
                             ->label('No. Kartu Keluarga')
                             ->required()
-                            ->maxLength(20)
-                            ->unique(ignoreRecord: true),
+                            ->numeric()
+                            ->length(16)
+                            ->unique(ignoreRecord: true)
+                            ->helperText('Nomor KK harus tepat 16 digit angka'),
                         Forms\Components\TextInput::make('head_name')
                             ->label('Nama Kepala Keluarga')
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('head_nik')
                             ->label('NIK Kepala Keluarga')
-                            ->maxLength(20)
-                            ->helperText('NIK ini akan dimasukkan otomatis sebagai anggota dengan hubungan Kepala Keluarga.'),
+                            ->numeric()
+                            ->length(16)
+                            ->helperText('NIK harus tepat 16 digit angka. NIK ini akan dimasukkan otomatis sebagai anggota dengan hubungan Kepala Keluarga.'),
                         Forms\Components\Select::make('head_gender')
                             ->label('Jenis Kelamin Kepala Keluarga')
                             ->options([

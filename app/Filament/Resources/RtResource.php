@@ -54,13 +54,37 @@ class RtResource extends Resource
                             ->preload()
                             ->reactive()
                             ->helperText('Pilih warga yang ditunjuk sebagai Ketua RT. Nama akan terisi otomatis.')
-                            ->options(fn () => Resident::query()->orderBy('name')->limit(50)->pluck('name', 'id')->toArray())
-                            ->getSearchResultsUsing(fn (string $search): array => Resident::query()
-                                ->where('name', 'like', "%{$search}%")
-                                ->orderBy('name')
-                                ->limit(50)
-                                ->pluck('name', 'id')
-                                ->toArray())
+                            ->options(function (callable $get) {
+                                $rtId = $get('id');
+                                if (!$rtId) {
+                                    return [];
+                                }
+                                return Resident::query()
+                                    ->whereHas('household', function($q) use ($rtId) {
+                                        $q->where('rt_id', $rtId);
+                                    })
+                                    ->where('status', Resident::STATUS_ACTIVE)
+                                    ->orderBy('name')
+                                    ->limit(100)
+                                    ->pluck('name', 'id')
+                                    ->toArray();
+                            })
+                            ->getSearchResultsUsing(function (string $search, callable $get): array {
+                                $rtId = $get('id');
+                                if (!$rtId) {
+                                    return [];
+                                }
+                                return Resident::query()
+                                    ->whereHas('household', function($q) use ($rtId) {
+                                        $q->where('rt_id', $rtId);
+                                    })
+                                    ->where('status', Resident::STATUS_ACTIVE)
+                                    ->where('name', 'like', "%{$search}%")
+                                    ->orderBy('name')
+                                    ->limit(100)
+                                    ->pluck('name', 'id')
+                                    ->toArray();
+                            })
                             ->getOptionLabelUsing(fn ($value): ?string => Resident::find($value)?->name)
                             ->afterStateUpdated(fn ($state, callable $set) => $set('leader_name', Resident::find($state)?->name)),
                         Forms\Components\TextInput::make('leader_name')
@@ -78,7 +102,8 @@ class RtResource extends Resource
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
-                Forms\Components\Section::make('Kartu Keluarga dalam RT ini')
+                // KK dikelola di menu "Daftar KK" terpisah
+                /*Forms\Components\Section::make('Kartu Keluarga dalam RT ini')
                     ->schema([
                         Forms\Components\Repeater::make('households')
                             ->relationship('households')
@@ -242,7 +267,7 @@ class RtResource extends Resource
                                     ->columns(1),
                             ]),
                     ])
-                    ->collapsible(),
+                    ->collapsible(),*/
             ]);
     }
 
