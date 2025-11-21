@@ -17,3 +17,19 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Backup files
+*.backup
+*.backup.*
+*.old
+*.old.*
+
+# Composer
+composer.phar
+
+# Deployment temp files
+sipakrt-deploy-*
+*.tar.gz
+
+# Temp scripts
+/tmp/*
