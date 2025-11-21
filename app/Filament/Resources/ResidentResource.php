@@ -40,6 +40,7 @@ class ResidentResource extends Resource
                         Forms\Components\Select::make('household_id')
                             ->label('Kartu Keluarga')
                             ->relationship('household', 'family_card_number')
+                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->family_card_number . ' - ' . $record->head_name)
                             ->required()
                             ->searchable()
                             ->preload(),

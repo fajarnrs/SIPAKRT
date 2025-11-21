@@ -4,6 +4,8 @@ namespace App\Observers;
 
 use App\Models\Household;
 use App\Models\Resident;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class HouseholdObserver
 {
@@ -103,9 +105,40 @@ class HouseholdObserver
             $headResident->update($residentData);
         } else {
             // Create baru
-            Resident::create(array_merge($residentData, [
+            $headResident = Resident::create(array_merge($residentData, [
                 'household_id' => $household->id,
             ]));
+            
+            // Auto-create user login untuk kepala keluarga
+            $this->createUserForHeadResident($headResident, $household);
+        }
+    }
+    
+    /**
+     * Create user account untuk kepala keluarga
+     */
+    protected function createUserForHeadResident(Resident $headResident, Household $household): void
+    {
+        // Jika sudah ada email dan belum punya user
+        if (!empty($household->head_email) && !$headResident->user_id) {
+            // Cek apakah email sudah dipakai user lain
+            $existingUser = User::where('email', $household->head_email)->first();
+            
+            if (!$existingUser) {
+                // Buat user baru
+                $user = User::create([
+                    'name' => $household->head_name,
+                    'email' => $household->head_email,
+                    'password' => Hash::make('password123'), // Default password
+                    'is_admin' => false,
+                ]);
+                
+                // Link user ke resident
+                $headResident->update(['user_id' => $user->id]);
+            } else {
+                // Link ke user yang sudah ada
+                $headResident->update(['user_id' => $existingUser->id]);
+            }
         }
     }
 }

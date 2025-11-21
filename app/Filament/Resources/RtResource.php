@@ -82,7 +82,7 @@ class RtResource extends Resource
                     ->schema([
                         Forms\Components\Repeater::make('households')
                             ->relationship('households')
-                            ->label('Daftar KK')
+                            ->label('Daftar Kartu Keluarga (KK)')
                             ->defaultItems(0)
                             ->minItems(0)
                             ->columns(1)
@@ -90,7 +90,7 @@ class RtResource extends Resource
                                 Forms\Components\Section::make('Data KK')
                                     ->schema([
                                         Forms\Components\TextInput::make('family_card_number')
-                                            ->label('No. Kartu Keluarga')
+                                            ->label('No. KK')
                                             ->required()
                                             ->maxLength(20)
                                             ->unique(ignoreRecord: true),
@@ -261,6 +261,11 @@ class RtResource extends Resource
                 Tables\Columns\TextColumn::make('current_leader')
                     ->label('Ketua RT')
                     ->getStateUsing(fn (Rt $record) => $record->currentLeaderName())
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->whereHas('currentLeader', function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%");
+                        });
+                    })
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('households_count')
                     ->counts('households')

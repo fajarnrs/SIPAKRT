@@ -12,6 +12,7 @@ class Resident extends Model
 
     protected $fillable = [
         'household_id',
+        'user_id',
         'nik',
         'name',
         'relationship',
@@ -52,5 +53,10 @@ class Resident extends Model
     public function household(): BelongsTo
     {
         return $this->belongsTo(Household::class);
+    }
+    
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
