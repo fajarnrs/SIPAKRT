@@ -1,204 +1,102 @@
-# 📊 SIPAKRT - Sistem Informasi Pendataan Anggota Kartu Keluarga RT# 📊 Data Warga - Sistem Pendataan Warga## Pendataan Warga
+# 📊 SIPAKRT - Sistem Pendataan Warga RT/KK
 
+> Aplikasi web untuk mengelola data Kartu Keluarga (KK), Warga, dan RT menggunakan Laravel 10 + Filament Admin Panel.
 
+[![Laravel](https://img.shields.io/badge/Laravel-10.49-red.svg)](https://laravel.com)
+[![Filament](https://img.shields.io/badge/Filament-2.17-orange.svg)](https://filamentphp.com)
+[![PHP](https://img.shields.io/badge/PHP-8.1+-blue.svg)](https://php.net)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-Aplikasi web untuk mengelola data Kartu Keluarga (KK), Warga, dan RT menggunakan Laravel 10 + Filament Admin Panel.
+---
 
+## ✨ Fitur Utama
 
+### 📋 Manajemen Kartu Keluarga (KK)
+- ✅ CRUD data KK dengan detail lengkap
+- ✅ Auto-update status (aktif/non-aktif) berdasarkan kepala keluarga
+- ✅ View read-only untuk detail KK
+- ✅ Auto-create kepala keluarga saat KK dibuat
+- ✅ Login menggunakan **No. KK (16 digit)** atau email
 
-## ✨ FiturAplikasi berbasis web untuk mengelola data penduduk, Kartu Keluarga (KK), dan RT menggunakan Laravel 10 dan Filament Admin Panel.Aplikasi Laravel + Filament untuk pendataan warga per RT/KK. Panel admin tersedia di `/admin` dan hanya dapat diakses oleh pengguna dengan atribut `is_admin = true`.
+### 👥 Manajemen Warga
+- ✅ Data lengkap dengan relasi KK
+- ✅ Auto-sync kepala keluarga
+- ✅ Status: Aktif, Meninggal, Pindah, dll
+- ✅ Auto-create user akun untuk kepala KK
 
+### 🏘️ Manajemen RT & Pengurus
+- ✅ Data RT dengan ketua RT
+- ✅ Pengurus dengan periode jabatan
+- ✅ Auto-update role user saat diangkat jadi Ketua RT
 
+### 📤 Export & Reporting
+- ✅ Export Excel dengan filter RT dan status
+- ✅ Format terstruktur dengan styling
 
-- 📋 **Kartu Keluarga (KK)** - CRUD, auto-update status, view read-only, auto-create kepala keluarga
+### 🔐 Multi-User & Security
+- ✅ **Admin**: Full access
+- ✅ **RT**: Akses terbatas per RT
+- ✅ **Warga**: Login dengan No. KK
+- ✅ Default password: password123
 
-- 👥 **Warga/Resident** - Data lengkap dengan relasi KK, auto-sync kepala keluarga  
+---
 
-- 🏘️ **RT & Pengurus** - Manajemen RT dengan pengurus dan periode jabatan## ✨ Fitur Utama## Menjalankan di Nginx
+## 🛠️ Tech Stack
 
-- 📤 **Export Excel** - Export dengan filter RT dan status
+| Technology | Version |
+|------------|---------|
+| **Laravel** | 10.49.1 |
+| **PHP** | 8.1+ |
+| **Filament** | 2.17.58 |
+| **MySQL** | 8.0 |
+| **Excel Export** | Maatwebsite/Excel 3.1.59 |
 
-- 🔐 **Role Management** - Admin (full), RT (terbatas per RT)
+---
 
+## 🚀 Quick Start
 
-
-**Tech Stack:** Laravel 10.49 • PHP 8.1+ • Filament 2.17 • MySQL 8.0 • Maatwebsite/Excel- 📋 **Manajemen Kartu Keluarga (KK)**1. **Instal dependensi produksi**
-
-
-
-## 🚀 Quick Start  - CRUD data KK dengan detail lengkap   ```bash
-
-
-
-### Regular Installation  - Auto-update status KK (aktif/non-aktif) berdasarkan status kepala keluarga   composer install --no-dev --optimize-autoloader
-
-
-
-```bash  - View page (read-only) untuk melihat detail KK   php artisan key:generate    # jika belum
-
-git clone https://github.com/fajarnrs/SIPAKRT.git
-
-cd SIPAKRT  - Auto-create resident kepala keluarga saat KK dibuat   php artisan migrate --seed  # membuat admin & data demo
-
-composer install
-
-cp .env.example .env   ```
-
-php artisan key:generate
-
-- 👥 **Manajemen Warga/Resident**
-
-# Edit .env untuk database config
-
-  - Data lengkap penduduk dengan relasi ke KK2. **Siapkan konfigurasi Nginx**
-
-php artisan migrate
-
-php artisan make:filament-user  - Auto-sync kepala keluarga ke tabel residents   - Salin berkas contoh `deploy/nginx.conf` ke `/etc/nginx/sites-available/pendataan-warga`.
-
-
-
-php artisan serve  - Status warga: Aktif, Meninggal, Pindah, dll   - Sesuaikan `server_name`, path `root`, dan `fastcgi_pass` dengan lingkungan server Anda.
-
-# http://localhost:8000/admin
-
-```   - Aktifkan situs: `sudo ln -s /etc/nginx/sites-available/pendataan-warga /etc/nginx/sites-enabled/`.
-
-
-
-### Docker Installation- 🏘️ **Manajemen RT & Pengurus**   - Uji konfigurasi lalu muat ulang:
-
-
-
-```bash  - Data RT dengan ketua RT     ```bash
-
-git clone https://github.com/fajarnrs/SIPAKRT.git
-
-cd SIPAKRT  - Data pengurus RT dengan periode jabatan     sudo nginx -t
-
-cp .env.example .env  # Set DB_HOST=db
-
-     sudo systemctl reload nginx
-
-docker-compose up -d --build
-
-docker-compose exec app composer install- 📤 **Export Excel**     ```
-
-docker-compose exec app php artisan key:generate
-
-docker-compose exec app php artisan migrate  - Export semua data KK
-
-docker-compose exec app php artisan make:filament-user
-
-  - Filter berdasarkan RT3. **Pastikan PHP-FPM dan permission benar**
-
-# http://localhost:8000/admin
-
-# phpMyAdmin: http://localhost:8080  - Filter berdasarkan status   ```bash
-
-```
-
-  - Format terstruktur dengan styling   sudo systemctl enable --now php8.1-fpm
-
-## 🔧 Post-Installation
-
-   sudo chown -R www-data:www-data storage bootstrap/cache
+### 📦 Installation (Regular)
 
 ```bash
-
-# Repair KK lama tanpa kepala keluarga- 🔐 **Multi-user dengan Role Management**   sudo chmod -R ug+rwx storage bootstrap/cache
-
-php scripts/repair-missing-head-residents.php
-
-  - Admin: Full access   ```
-
-# Clear cache
-
-php artisan optimize:clear  - RT: Access terbatas per RT
-
-```
-
-4. **Konfigurasi domain/HTTPS**
-
-## 📚 Documentation
-
-## 🛠️ Tech Stack   - Gunakan Let’s Encrypt (mis. `certbot --nginx`) untuk menambahkan blok `listen 443 ssl`.
-
-- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Production deployment (cPanel/VPS/Docker)
-
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contributing guidelines   - Perbarui `.env` (`APP_URL`, detail database, mail) kemudian jalankan `php artisan config:cache`.
-
-- **[GITHUB_DEPLOYMENT.md](GITHUB_DEPLOYMENT.md)** - GitHub setup guide
-
-- **Framework**: Laravel 10.49.1
-
-## 🐛 What's New (v1.0.1)
-
-- **PHP**: 8.1+5. **Login ke panel**
-
-- ✅ Fix: Auto-create kepala keluarga saat KK dibuat (HouseholdObserver)
-
-- ✅ Auto-update status KK jika kepala meninggal/cerai (ResidentObserver)  - **Admin Panel**: Filament 2.17.58   - Buka `http(s)://domain-anda/admin`
-
-- ✅ View page read-only untuk detail KK
-
-- ✅ Export Excel dengan filter RT & status- **Database**: MySQL 8.0   - Gunakan akun default `admin@warga.test / admin123` dan segera ganti kata sandi.
-
-- ✅ Repair script untuk data lama
-
-- ✅ Docker support dengan docker-compose- **Export**: Maatwebsite/Excel 3.1.59
-
-- ✅ CI/CD dengan GitHub Actions
-
-- **Frontend**: Livewire, Alpine.js, Tailwind CSSReferensi konfigurasi tambahan tersedia di [dokumentasi Laravel deploy](https://laravel.com/docs/deployment).
-
-## 📝 License
-
-
-
-MIT License## 📦 Instalasi
-
-
-
-## 🙏 Credits### Quick Start (Regular)
-
-
-
-Built with ❤️ using Laravel • Filament • Maatwebsite/Excel```bash
-
-# Clone & setup
+# Clone repository
 git clone https://github.com/fajarnrs/SIPAKRT.git
 cd SIPAKRT
+
+# Install dependencies
 composer install
 cp .env.example .env
 php artisan key:generate
 
-# Database (edit .env dulu!)
+# Database setup (edit .env first!)
 php artisan migrate
 php artisan make:filament-user
 
-# Run
+# Run development server
 php artisan serve
-# http://localhost:8000/admin
+# Access: http://localhost:8000/admin
 ```
 
-### Quick Start (Docker) 🐳
+### 🐳 Installation (Docker)
 
 ```bash
 # Clone & setup
 git clone https://github.com/fajarnrs/SIPAKRT.git
 cd SIPAKRT
-cp .env.example .env  # Edit DB_HOST=db
+cp .env.example .env  # Edit: DB_HOST=db
 
-# Start
+# Start containers
 docker-compose up -d --build
 docker-compose exec app composer install
 docker-compose exec app php artisan key:generate
 docker-compose exec app php artisan migrate
 docker-compose exec app php artisan make:filament-user
 
-# Access: http://localhost:8000/admin
+# Access:
+# App: http://localhost:8000/admin
+# phpMyAdmin: http://localhost:8080
 ```
+
+---
 
 ## 🔧 Post-Installation
 
@@ -206,25 +104,139 @@ docker-compose exec app php artisan make:filament-user
 # Repair data lama (jika ada KK tanpa kepala keluarga)
 php scripts/repair-missing-head-residents.php
 
-# Clear cache
+# Clear all cache
 php artisan optimize:clear
+php artisan config:cache
 ```
+
+---
 
 ## 🚀 Deployment
 
-Lihat [DEPLOYMENT.md](DEPLOYMENT.md) untuk panduan lengkap deployment ke cPanel, VPS, atau Docker Production.
+Panduan lengkap deployment tersedia di dokumentasi:
 
-## � Dokumentasi
+| Platform | Guide | Description |
+|----------|-------|-------------|
+| **cPanel** | [DEPLOYMENT-FROM-GITHUB.md](DEPLOYMENT-FROM-GITHUB.md) | Deploy via GitHub (tukar guling method) |
+| **VPS/Server** | [DEPLOYMENT.md](DEPLOYMENT.md) | Nginx/Apache production setup |
+| **Docker** | [docker-compose.yml](docker-compose.yml) | Container production |
 
-- **README.md** - Quick start guide
-- **DEPLOYMENT.md** - Production deployment
-- **CONTRIBUTING.md** - Contributing guidelines  
-- **GITHUB_DEPLOYMENT.md** - GitHub setup guide
+### Quick Deploy Commands
+
+**From GitHub (Production):**
+```bash
+# Download deployment script
+wget https://raw.githubusercontent.com/fajarnrs/SIPAKRT/main/deploy-from-github-cpanel.sh
+chmod +x deploy-from-github-cpanel.sh
+
+# Run deployment (data aman, .env tidak ditimpa)
+./deploy-from-github-cpanel.sh
+```
+
+**Low Memory Server:**
+```bash
+wget https://raw.githubusercontent.com/fajarnrs/SIPAKRT/main/deploy-from-github-cpanel-lowmem.sh
+chmod +x deploy-from-github-cpanel-lowmem.sh
+./deploy-from-github-cpanel-lowmem.sh
+```
+
+---
+
+## 📚 Dokumentasi
+
+| File | Description |
+|------|-------------|
+| [README.md](README.md) | Quick start guide (this file) |
+| [DEPLOYMENT-FROM-GITHUB.md](DEPLOYMENT-FROM-GITHUB.md) | GitHub deployment (recommended) |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Production deployment guide |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Contributing guidelines |
+| [QUICK-DEPLOY-GUIDE.txt](QUICK-DEPLOY-GUIDE.txt) | Quick reference card |
+
+---
+
+## 🎯 Default Credentials
+
+| Role | Email/Username | Password |
+|------|----------------|----------|
+| **Admin** | admin@warga.test | admin123 |
+| **Warga** | No. KK (16 digit) | password123 |
+| **Ketua RT** | No. KK (16 digit) | password123 |
+
+⚠️ **PENTING:** Ganti password default setelah login pertama!
+
+---
+
+## 🆕 What's New (v2.0)
+
+### New Features
+- ✨ **Login dengan No. KK** (16 digit) atau email
+- ✨ **Auto-create user** untuk kepala KK (password: password123)
+- ✨ **Auto-update role** saat diangkat jadi Ketua RT
+- ✨ **Validasi ketat** 16 digit untuk No. KK dan NIK
+- ✨ **Search by nama** kepala keluarga di daftar KK
+- ✨ **Cascade delete** (hapus KK → auto hapus warga & user)
+
+### New Commands
+```bash
+# Create users untuk KK existing
+php artisan households:create-users
+
+# Delete all data (development only!)
+php artisan data:delete-all --force
+```
+
+### Improvements
+- 🐛 Fix duplicate user creation
+- 🐛 Fix dropdown filter RT leader selection
+- 🐛 Fix email nullable support
+- 🎨 Kapitalisasi label RT dan KK
+- 🎨 Simplified RT edit form
+
+---
+
+## 🤝 Contributing
+
+Kontribusi sangat diterima! Lihat [CONTRIBUTING.md](CONTRIBUTING.md) untuk panduan.
+
+1. Fork repository
+2. Create feature branch (git checkout -b feature/AmazingFeature)
+3. Commit changes (git commit -m 'Add some AmazingFeature')
+4. Push to branch (git push origin feature/AmazingFeature)
+5. Open Pull Request
+
+---
 
 ## 📝 License
 
-MIT License
+MIT License - lihat [LICENSE](LICENSE) file untuk detail.
 
-## � Credits
+---
 
-Built with Laravel • Filament • Maatwebsite/Excel
+## 🙏 Credits
+
+Built with ❤️ by **[fajarnrs](https://github.com/fajarnrs)**
+
+**Tech Stack:**
+- [Laravel](https://laravel.com) - The PHP Framework
+- [Filament](https://filamentphp.com) - Admin Panel
+- [Maatwebsite/Excel](https://laravel-excel.com) - Excel Export
+- [Livewire](https://laravel-livewire.com) - Dynamic UI
+- [Tailwind CSS](https://tailwindcss.com) - Styling
+
+---
+
+## 📞 Support
+
+- **Issues:** [GitHub Issues](https://github.com/fajarnrs/SIPAKRT/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/fajarnrs/SIPAKRT/discussions)
+- **Documentation:** [Wiki](https://github.com/fajarnrs/SIPAKRT/wiki)
+
+---
+
+<div align="center">
+
+**⭐ Star this repo if you find it useful!**
+
+[Report Bug](https://github.com/fajarnrs/SIPAKRT/issues) • [Request Feature](https://github.com/fajarnrs/SIPAKRT/issues) • [Documentation](https://github.com/fajarnrs/SIPAKRT/wiki)
+
+</div>
