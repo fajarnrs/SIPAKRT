@@ -199,7 +199,7 @@ MIT License - lihat [LICENSE](LICENSE) file untuk detail.
 
 ## 🙏 Credits
 
-Built with ❤️ by **[fajarnrs](https://github.com/fajarnrs)**
+Built by **[fajarnrs](https://github.com/fajarnrs)**
 
 **Tech Stack:**
 - [Laravel](https://laravel.com) - The PHP Framework
