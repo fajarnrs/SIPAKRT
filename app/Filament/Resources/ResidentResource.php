@@ -160,12 +160,6 @@ class ResidentResource extends Resource
                         'danger' => Resident::STATUS_DECEASED,
                         'warning' => Resident::STATUS_MOVED,
                         'secondary' => Resident::STATUS_TEMPORARY,
-                    ])
-                    ->icons([
-                        'heroicon-o-badge-check' => Resident::STATUS_ACTIVE,
-                        'heroicon-o-x-circle' => Resident::STATUS_DECEASED,
-                        'heroicon-o-arrow-right' => Resident::STATUS_MOVED,
-                        'heroicon-o-clock' => Resident::STATUS_TEMPORARY,
                     ]),
                 Tables\Columns\TextColumn::make('gender')
                     ->label('Gender')
