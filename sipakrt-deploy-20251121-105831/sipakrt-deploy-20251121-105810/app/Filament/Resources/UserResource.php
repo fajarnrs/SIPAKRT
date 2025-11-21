@@ -138,13 +138,9 @@ class UserResource extends Resource
                         'warga' => 'Warga',
                         default => ucfirst($state ?? 'Tidak Diketahui'),
                     }),
-                Tables\Columns\BadgeColumn::make('is_active')
+                Tables\Columns\IconColumn::make('is_active')
                     ->label('Aktif')
-                    ->formatStateUsing(fn ($state) => $state ? 'Aktif' : 'Nonaktif')
-                    ->colors([
-                        'success' => fn ($state) => $state === true,
-                        'danger' => fn ($state) => $state === false,
-                    ]),
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('household.family_card_number')
                     ->label('No. KK')
                     ->sortable()
